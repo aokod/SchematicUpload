@@ -1,4 +1,11 @@
-#upload-schematic .row {
+/* Upload page layout - using Bootstrap grid */
+#upload-schematic .row, #list-schematic .row {
+	margin: 0;
+}
+
+#upload-schematic .span6,
+#list-schematic .span6 {
+	width: calc(50% - 10px);
 	margin: 0;
 }
 
@@ -7,6 +14,12 @@
 	overflow: hidden;
 }
 
+#upload-schematic .span6.preview,
+#list-schematic .span6.preview {
+	float: right;
+}
+
+/* Form styling - Bootstrap form-horizontal handles most of this */
 #upload-schematic .span6.upload .form-horizontal .control-group .control-label {
 	width: 35%
 }
@@ -20,31 +33,13 @@
 	width: -webkit-fill-available;
 }
 
-#upload-schematic .span6.preview {
-	float: right;
-}
-
-#upload-schematic .span6 {
-	width: calc(50% - 10px);
-	margin: 0;
-}
-
-#upload-schematic .span6.upload form#upload-form {
-	margin-bottom: 10px;
-}
-
-#upload-schematic .span6.upload .form-horizontal .control-group {
-	margin-bottom: 8px;
-}
-
-#upload-schematic .span6.upload .accordion .accordion-group {
-	margin-bottom: 5px;
-}
-
-#upload-schematic .span6.preview #preview-panel {
+#upload-schematic .span6.preview #preview-panel,
+#list-schematic .span6.preview #preview-panel {
 	min-height: 275px;
 	height: 45vh;
 	height: calc(100vh - 345px);
+	max-height: 725px;
+	position: relative;
 	background-color: #f5f5f5;
     border: 1px solid #e3e3e3;
     -webkit-border-radius: 4px;
@@ -55,9 +50,149 @@
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 }
 
-#upload-schematic .span6.preview #preview-panel p#preview-text {
+#upload-schematic .span6.preview #preview-panel p#preview-text,
+#list-schematic .span6.preview #preview-panel p#preview-text,
+#list-schematic .span6.list #schematic-list-container #table-wrapper p#loading-message,
+#list-schematic .span6.list #schematic-list-container #table-wrapper p#empty-message {
 	padding: 25px 5px 0;
-	text-align: center;
 	color: #999;
 	text-shadow: 0 1px 0 #fff;
+}
+
+#upload-schematic .span6.preview #preview-panel #preview-stats,
+#list-schematic .span6.preview #preview-panel #preview-stats {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: #fff;
+	padding: 8px 12px;
+	border-radius: 4px;
+	font-family: monospace;
+	font-size: 12px;
+	line-height: 1.4;
+	z-index: 1000;
+	pointer-events: none;
+}
+
+#upload-schematic .span6.preview #preview-panel #preview-stats .stats-line,
+#list-schematic .span6.preview #preview-panel #preview-stats .stats-line {
+	margin: 2px 0;
+}
+
+#upload-schematic .span6.preview #preview-panel #preview-stats .stats-label,
+#list-schematic .span6.preview #preview-panel #preview-stats .stats-label {
+	color: #aaa;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#upload-schematic .span6.preview #preview-panel > canvas,
+#list-schematic .span6.preview #preview-panel > canvas {
+	border-radius: 3px;
+}
+
+/* List page layout - using Bootstrap grid */
+#list-schematic .span6.list {
+	float: left;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+#list-schematic .span6.list #schematic-list-container {
+	display: flex;
+	flex-direction: column;
+	min-height: 275px;
+	height: 45vh;
+	height: calc(100vh - 345px);
+	max-height: 725px;
+}
+
+#list-schematic .span6.list #schematic-list-container > div:first-child {
+	margin-bottom: 10px;
+}
+
+#list-schematic .span6.list #schematic-list-container > div:first-child > .input-prepend {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+#list-schematic .span6.list #schematic-list-container > div:first-child .add-on {
+	color: #999;
+}
+
+#list-schematic .span6.list #schematic-list-container > div:first-child input#search-input {
+	width: calc(100% - 41px);
+}
+
+#list-schematic .span6.list #schematic-list-container #table-wrapper {
+	flex: 1;
+	overflow-y: auto;
+	min-height: 0;
+	background-color: #f5f5f5;
+	border-radius: 4px;
+}
+
+#list-schematic .span6.list #schematic-table {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+	background-color: #ffffff;
+	margin-bottom: 0;
+}
+
+#list-schematic .span6.list #schematic-table thead tr > th {
+	padding: 5px 8px;
+}
+
+#list-schematic .span6.list #schematic-table td {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#list-schematic .span6.list tbody#schematic-table-body > tr > td:nth-child(3) {
+	padding: 6px 8px;
+}
+
+#upload-schematic .span6.preview #preview-panel::after,
+#list-schematic .span6.preview #preview-panel::after {
+	content: "Preview";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #9da0a4;
+    -webkit-border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px 0 4px 0;
+    border-radius: 4px 0 4px 0;
+}
+
+/* Pagination */
+#list-schematic div#pagination-container {
+	display: block;
+	flex-shrink: 0;
+	margin-top: 10px;
+	text-align: center;
+	background: linear-gradient(to-bottom, #f5f5f5, transparent);
+}
+
+#list-schematic #pagination-container .pagination {
+	margin: 0 auto;
+	display: inline-block;
+}
+
+#list-schematic #pagination-container .pagination #pagination {
+	background: #fff;
+}
+
+#pagination-container .pagination ul>li>a {
+    padding: 4px 8px;
+}
+
+#list-schematic #pagination-container p {
+	margin-bottom: 0;
 }

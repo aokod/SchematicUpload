@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>List of schematics - Aedificium</title>
+		<meta name="description" content="Aedificium (aedi.app) is a lightweight building server with a whole bunch of cool features.">
+		<meta name="keywords" content="Aedificium,aedi,aedi.app,architecture,build,building,creative,freebuild,minecraft,server,servers">
+	
+		<link href="https://aedi.app/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+		<link href="https://aedi.app/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
+		<link href="https://aedi.app/assets/css/custom.css" rel="stylesheet" type="text/css" media="all">
+		<link rel="stylesheet" href="/schem.css"/>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://aedi.app/assets/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			// Toggle accordion icons when expanded/collapsed
+			$(document).ready(function() {
+				$('.accordion-body').on('shown.bs.collapse', function() {
+					$(this).siblings('.accordion-heading').find('.icon-angle-down').removeClass('icon-angle-down').addClass('icon-angle-up');
+				});
+				$('.accordion-body').on('hidden.bs.collapse', function() {
+					$(this).siblings('.accordion-heading').find('.icon-angle-up').removeClass('icon-angle-up').addClass('icon-angle-down');
+				});
+			});
+		</script>
+		
+		<link rel="icon" type="image/png" href="https://aedi.app/assets/img/jules-16x16.png" sizes="16x16">
+		<link rel="icon" type="image/png" href="https://aedi.app/assets/img/jules-32x32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="https://aedi.app/assets/img/jules-128x128.png" sizes="128x128">
+	</head>
+
+	<body style="zoom: 1;">
+		<div class="container-fluid">
+			<div class="masthead">
+				<img src="https://aedi.app/assets/svg/jules.svg" onerror="this.src='https://aedi.app/assets/img/jules.png'" alt="Jules" style="float:left; height:45px">
+				<h3 class="joiner">play.aedi.app</h3>
+				<h3 class="muted">Aedificium</h3>
+				
+				<div class="navbar">
+					<div class="navbar-inner">
+						<div class="container">
+							<ul class="nav">
+								<li><a href="https://aedi.app/">Home</a></li>
+								<li><a href="https://aedi.app/blog/latest">Blog</a></li>
+								<li class="dropdown active">
+									<a href="https://aedi.app/resources" class="dropdown-toggle" data-toggle="dropdown">Resources <b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a href="https://aedi.app/map">Dynmap® map</a></li>
+										<li><a href="https://aedi.app/stats">Server statistics</a></li>
+										<li class="divider"></li>
+										<li class="nav-header">Forms</li>
+										<li><a href="https://aedi.app/forms/banned">Appeal a ban</a></li>
+										<li><a href="https://aedi.app/forms/architect">Become an architect</a></li>
+										<li class="divider"></li>
+										<li class="nav-header">External pages</li>
+										<li><a href="https://files.aedi.app/" target="_blank">Static file server <i class="icon-external-link"></i></a></li>
+										<li><a href="https://panel.aedi.app/" target="_blank">Pterodactyl® panel <i class="icon-external-link"></i></a></li>
+										<li><a href="https://www.planetminecraft.com/member/aedifi" target="_blank">Planet Minecraft <i class="icon-external-link"></i></a></li>
+									</ul><!-- /dropdown-menu -->
+								</li><!-- /dropdown -->
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Support <b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li class="nav-header">Introduction</li>
+										<li><a href="https://aedi.app/support">About the server</a></li>
+										<li><a href="https://aedi.app/support/rules">Conduct policy</a></li>
+										<li><a href="https://aedi.app/support/issues">Reporting issues</a></li>
+										<li><a href="https://aedi.app/support/faq">Frequently asked questions</a></li>
+										<li class="divider"></li>
+										<li><a href="https://aedi.app/support">More articles »</a></li>
+									</ul><!-- /dropdown-menu -->
+								</li><!-- /dropdown -->
+								<li><a href="https://forum.aedi.app">Forum</a></li>
+							</ul><!-- /nav -->
+						</div><!-- /container -->
+					</div><!-- /navbar-inner -->
+				</div><!-- /navbar -->
+
+			</div><!-- /masthead -->
+			<!-- Start of content -->
+			<div class="content">
+				<ul class="breadcrumb">
+    				<li><a href="/">Index</a> <span class="divider">/</span></li>
+        			<li class="active">List of schematics</li>
+    			</ul><!-- /breadcrumb -->
+				<section id="list-schematic">
+					<div class="row fluid">
+						<div class="span6 list">
+							<div id="schematic-list-container">
+								<!-- Search bar -->
+								<div>
+									<div class="input-prepend">
+										<span class="add-on"><i class="icon-search"></i></span>
+										<input id="search-input" type="text" placeholder="Search schematics by name...">
+										<span class="add-on" id="clear-search" style="cursor: pointer; display: none;">
+											<span style="font-weight: bold;">×</span>
+										</span>
+									</div>
+								</div>
+								
+								<div id="table-wrapper">
+									<p id="loading-message" class="text-center"><i class="icon-spinner icon-spin"></i> Loading schematics...</p>
+									<table id="schematic-table" class="table table-striped table-bordered" style="display: none;">
+										<colgroup>
+											<col style="width: 50%;">
+											<col style="width: 15%;">
+											<col style="width: 19%;">
+										</colgroup>
+										<thead id="schematic-table-head" style="display: none;">
+											<tr>
+												<th class="text-center">Name</th>
+												<th class="text-center">Size</th>
+												<th class="text-center">Actions</th>
+											</tr>
+										</thead>
+										<tbody id="schematic-table-body">
+										</tbody>
+									</table>
+									<p id="empty-message" class="text-center text-muted" style="display: none;"">
+										No schematics found.
+									</p>
+								</div>
+								
+								<!-- Pagination -->
+								<div id="pagination-container">
+									<div class="pagination">
+										<ul id="pagination">
+										</ul>
+									</div>
+									<p id="resultsPerPage" class="text-muted" style="display: none;">Showing <select id="items-per-page-select" style="width: auto; margin: 0 3px; padding: 4px 3px;">
+										<option value="5">5</option>
+										<option value="10">10</option>
+										<option value="15" selected>15</option>
+										<option value="20">20</option>
+										<option value="25">25</option>
+									</select> results per page</p>
+								</div>
+							</div>
+						</div><!-- /span6 -->
+						<div class="span6 preview">
+							<div id="preview-panel">
+								<p id="preview-text" class="text-center text-muted">Click "Preview" on a schematic to see it here.</p>
+								<div id="preview-stats" style="display: none;">
+									<div class="stats-line"><span class="stats-label">FPS:</span> <span id="stats-fps">-</span></div>
+									<div class="stats-line"><span class="stats-label">Meshes:</span> <span id="stats-meshes">-</span></div>
+									<div class="stats-line"><span class="stats-label">Vertices:</span> <span id="stats-vertices">-</span></div>
+									<div class="stats-line"><span class="stats-label">Faces:</span> <span id="stats-faces">-</span></div>
+								</div>
+								<div id="preview-controls" style="display: none; position: absolute; top: 10px; right: 10px; z-index: 1001;">
+									<button id="pause-resume-btn" class="btn btn-mini" title="Pause/resume preview">
+										<i class="icon-pause"></i>
+									</button>
+									<button id="exit-preview-btn" class="btn btn-mini" title="Stop preview">
+										<i class="icon-remove icon-large"></i>
+									</button>
+								</div>
+							</div>
+						</div><!-- /span6 -->
+					</div><!-- /row fluid -->
+				</section><!-- /list-schematic -->
+			</div><!-- /content -->
+			<!-- End of content -->
+			<div class="footer">
+				<div class="btn-group">
+					<a class="btn" href="https://aedi.app/tos">Terms</a>
+					<a class="btn" href="https://aedi.app/privacy">Privacy</a>
+					<a class="btn" href="mailto:aedi@murgleis.com">Contact</a>
+					<a class="btn" href="https://aedi.app/sitemap">Sitemap</a>
+				</div>
+				<p>Copyright © 2025 Aedificium, some rights reserved.</p>
+				<p>Minecraft is property of <a href="https://www.mojang.com/about/" target="_blank">Mojang Specifications <i class="icon-external-link"></i></a>.</p>
+			</div><!-- /footer -->
+		</div><!-- /container-fluid -->
+		
+		<script type="module">
+			import renderSchematic from '/preview/src/webschematics.js';
+			
+			let currentEllipsisInterval = null;
+			let currentSchematicFile = null;
+			let currentRenderer = null;
+			let isPaused = false;
+			
+			// Set up stats event listener
+			const previewStats = document.getElementById("preview-stats");
+			const statsFps = document.getElementById("stats-fps");
+			const statsMeshes = document.getElementById("stats-meshes");
+			const statsVertices = document.getElementById("stats-vertices");
+			const statsFaces = document.getElementById("stats-faces");
+			
+			window.addEventListener('webschematics:stats', (event) => {
+				const { type, data } = event.detail;
+				
+				// Only process stats if preview panel has a canvas (active render)
+				const previewPanel = document.getElementById("preview-panel");
+				if (!previewPanel || !previewPanel.querySelector('canvas')) return;
+				
+				if (type === 'fps') {
+					statsFps.textContent = data.fps;
+					statsMeshes.textContent = data.meshes.toLocaleString();
+					statsVertices.textContent = data.vertices.toLocaleString();
+					statsFaces.textContent = data.faces.toLocaleString();
+					previewStats.style.display = "block";
+				} else if (type === 'render:complete' || type === 'render:finished') {
+					// Update geometry stats when rendering completes
+					statsMeshes.textContent = data.meshes.toLocaleString();
+					statsVertices.textContent = data.vertices.toLocaleString();
+					statsFaces.textContent = data.faces.toLocaleString();
+					previewStats.style.display = "block";
+				}
+			});
+			
+			// Function to clear the preview panel (remove renderer)
+			function clearPreview() {
+				const previewPanel = document.getElementById("preview-panel");
+				const previewText = document.getElementById("preview-text");
+				const previewStats = document.getElementById("preview-stats");
+				const previewControls = document.getElementById("preview-controls");
+				
+				// Remove all children except preview-text, preview-stats, and preview-controls
+				const children = Array.from(previewPanel.children);
+				children.forEach(child => {
+					if (child !== previewText && child !== previewStats && child !== previewControls) {
+						previewPanel.removeChild(child);
+					}
+				});
+				
+				// Hide stats and controls
+				if (previewStats) previewStats.style.display = "none";
+				if (previewControls) previewControls.style.display = "none";
+				
+				// Show preview text
+				previewText.style.display = "";
+				previewText.textContent = "Click \"Preview\" on a schematic to see it here.";
+				
+				// Reset renderer state
+				currentRenderer = null;
+				isPaused = false;
+			}
+			
+			// Function to format file size
+			function formatFileSize(bytes) {
+				if (bytes === 0) return '0 B';
+				const k = 1024;
+				const sizes = ['B', 'KB', 'MB', 'GB'];
+				const i = Math.floor(Math.log(bytes) / Math.log(k));
+				return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+			}
+			
+			// Function to load and render a schematic
+			async function previewSchematic(fileName, encodedName) {
+				const previewText = document.getElementById("preview-text");
+				const previewPanel = document.getElementById("preview-panel");
+				
+				// Clear any existing interval
+				if (currentEllipsisInterval) {
+					clearInterval(currentEllipsisInterval);
+					currentEllipsisInterval = null;
+				}
+				
+				// Clear previous preview
+				clearPreview();
+				
+				// Show loading message
+				const baseMessage = "<i class='icon-spinner icon-spin'></i> Loading a preview of the schematic";
+				previewText.style.display = "";
+				
+				// Animate ellipsis (1-3 periods)
+				let ellipsisCount = 0;
+				currentEllipsisInterval = setInterval(() => {
+					ellipsisCount = (ellipsisCount % 3) + 1;
+					previewText.innerHTML = baseMessage + ".".repeat(ellipsisCount);
+				}, 500);
+				
+				try {
+					// Fetch the schematic file
+					const response = await fetch(`/api/list/download/${encodedName}`);
+					if (!response.ok) {
+						throw new Error(`Failed to fetch schematic: ${response.statusText}`);
+					}
+					
+					const blob = await response.blob();
+					const file = new File([blob], fileName, { type: blob.type });
+					
+					// Render the schematic
+					const renderer = await renderSchematic(file, previewPanel,
+						'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21.10');
+					
+					// Store renderer reference (cleanup function)
+					currentRenderer = renderer;
+					isPaused = false;
+					
+					// Rendering complete - clear interval and hide preview-text
+					if (currentEllipsisInterval) {
+						clearInterval(currentEllipsisInterval);
+						currentEllipsisInterval = null;
+					}
+					previewText.style.display = "none";
+					
+					// Show stats and controls
+					const previewStats = document.getElementById("preview-stats");
+					const previewControls = document.getElementById("preview-controls");
+					if (previewStats) previewStats.style.display = "block";
+					if (previewControls) previewControls.style.display = "block";
+					
+					// Update pause/resume button icon
+					const pauseResumeBtn = document.getElementById("pause-resume-btn");
+					if (pauseResumeBtn) {
+						const icon = pauseResumeBtn.querySelector("i");
+						if (icon) {
+							icon.className = "icon-pause";
+						}
+					}
+					
+					currentSchematicFile = fileName;
+				} catch (error) {
+					// On error, stop animation and show error message
+					if (currentEllipsisInterval) {
+						clearInterval(currentEllipsisInterval);
+						currentEllipsisInterval = null;
+					}
+					previewText.textContent = "Error loading preview: " + error.message;
+					console.error("Error previewing schematic:", error);
+				}
+			}
+			
+			// Function to download a schematic
+			function downloadSchematic(encodedName, fileName) {
+				const link = document.createElement('a');
+				link.href = `/api/list/download/${encodedName}`;
+				link.download = fileName;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			}
+			
+			// Global state
+			let allSchematics = [];
+			let filteredSchematics = [];
+			let currentPage = 1;
+			let itemsPerPage = 15;
+			
+			// Function to create a table row for a schematic
+			function createSchematicRow(schematic) {
+				const row = document.createElement("tr");
+				
+				const nameCell = document.createElement("td");
+				nameCell.textContent = schematic.name;
+				nameCell.style.overflow = "hidden";
+				nameCell.style.textOverflow = "ellipsis";
+				nameCell.style.whiteSpace = "nowrap";
+				row.appendChild(nameCell);
+				
+				const sizeCell = document.createElement("td");
+				sizeCell.textContent = formatFileSize(schematic.size);
+				sizeCell.className = "text-center";
+				row.appendChild(sizeCell);
+				
+				const actionsCell = document.createElement("td");
+				actionsCell.className = "text-center";
+				
+				const previewBtn = document.createElement("button");
+				previewBtn.className = "btn btn-mini";
+				previewBtn.textContent = "Preview";
+				previewBtn.onclick = () => previewSchematic(schematic.name, schematic.encodedName || schematic.name);
+				
+				const downloadBtn = document.createElement("button");
+				downloadBtn.className = "btn btn-mini";
+				downloadBtn.innerHTML = "<i class='icon-download-alt'></i>";
+				downloadBtn.title = "Download";
+				downloadBtn.onclick = () => downloadSchematic(schematic.encodedName || schematic.name, schematic.name);
+				
+				actionsCell.appendChild(downloadBtn);
+				actionsCell.appendChild(document.createTextNode(" "));
+				actionsCell.appendChild(previewBtn);
+				row.appendChild(actionsCell);
+				
+				return row;
+			}
+			
+			// Function to render the current page
+			function renderPage() {
+				const tableBody = document.getElementById("schematic-table-body");
+				const table = document.getElementById("schematic-table");
+				const tableHead = document.getElementById("schematic-table-head");
+				const emptyMessage = document.getElementById("empty-message");
+				const paginationContainer = document.getElementById("pagination-container");
+				const paginationUl = document.getElementById("pagination");
+				
+				// Clear table body
+				tableBody.innerHTML = "";
+				
+				// Calculate pagination
+				const totalPages = Math.ceil(filteredSchematics.length / itemsPerPage);
+				const startIndex = (currentPage - 1) * itemsPerPage;
+				const endIndex = Math.min(startIndex + itemsPerPage, filteredSchematics.length);
+				const pageSchematics = filteredSchematics.slice(startIndex, endIndex);
+				
+				// Show/hide table and thead based on whether there are results
+				if (filteredSchematics.length === 0) {
+					table.style.display = "none";
+					if (tableHead) tableHead.style.display = "none";
+					emptyMessage.style.display = "block";
+					// Hide pagination and results per page when no schematics
+					paginationContainer.style.display = "none";
+					const resultsPerPage = document.getElementById("resultsPerPage");
+					if (resultsPerPage) resultsPerPage.style.display = "none";
+				} else {
+					table.style.display = "table";
+					if (tableHead) tableHead.style.display = "";
+					emptyMessage.style.display = "none";
+				}
+				
+				// Render rows for current page
+				pageSchematics.forEach(schematic => {
+					tableBody.appendChild(createSchematicRow(schematic));
+				});
+				
+				// Render pagination
+				if (totalPages > 1) {
+					paginationUl.innerHTML = "";
+					
+					// First page button (<<)
+					const firstLi = document.createElement("li");
+					firstLi.className = currentPage === 1 ? "disabled" : "";
+					const firstLink = document.createElement("a");
+					firstLink.href = "#";
+					firstLink.innerHTML = "&laquo;&laquo;";
+					if (currentPage > 1) {
+						firstLink.onclick = (e) => {
+							e.preventDefault();
+							currentPage = 1;
+							renderPage();
+						};
+					}
+					firstLi.appendChild(firstLink);
+					paginationUl.appendChild(firstLi);
+					
+					// Previous page button (<)
+					const prevLi = document.createElement("li");
+					prevLi.className = currentPage === 1 ? "disabled" : "";
+					const prevLink = document.createElement("a");
+					prevLink.href = "#";
+					prevLink.innerHTML = "&laquo;";
+					if (currentPage > 1) {
+						prevLink.onclick = (e) => {
+							e.preventDefault();
+							currentPage--;
+							renderPage();
+						};
+					}
+					prevLi.appendChild(prevLink);
+					paginationUl.appendChild(prevLi);
+					
+					// Page number buttons
+					const maxVisiblePages = 7;
+					let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+					let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+					
+					if (endPage - startPage < maxVisiblePages - 1) {
+						startPage = Math.max(1, endPage - maxVisiblePages + 1);
+					}
+					
+					if (startPage > 1) {
+						const firstPageLi = document.createElement("li");
+						const firstPageLink = document.createElement("a");
+						firstPageLink.href = "#";
+						firstPageLink.textContent = "1";
+						firstPageLink.onclick = (e) => {
+							e.preventDefault();
+							currentPage = 1;
+							renderPage();
+						};
+						firstPageLi.appendChild(firstPageLink);
+						paginationUl.appendChild(firstPageLi);
+						
+						if (startPage > 2) {
+							const ellipsisLi = document.createElement("li");
+							ellipsisLi.className = "disabled";
+							const ellipsisLink = document.createElement("a");
+							ellipsisLink.href = "#";
+							ellipsisLink.textContent = "...";
+							ellipsisLi.appendChild(ellipsisLink);
+							paginationUl.appendChild(ellipsisLi);
+						}
+					}
+					
+					for (let i = startPage; i <= endPage; i++) {
+						const pageLi = document.createElement("li");
+						pageLi.className = i === currentPage ? "active" : "";
+						const pageLink = document.createElement("a");
+						pageLink.href = "#";
+						pageLink.textContent = i;
+						if (i !== currentPage) {
+							pageLink.onclick = (e) => {
+								e.preventDefault();
+								currentPage = i;
+								renderPage();
+							};
+						}
+						pageLi.appendChild(pageLink);
+						paginationUl.appendChild(pageLi);
+					}
+					
+					if (endPage < totalPages) {
+						if (endPage < totalPages - 1) {
+							const ellipsisLi = document.createElement("li");
+							ellipsisLi.className = "disabled";
+							const ellipsisLink = document.createElement("a");
+							ellipsisLink.href = "#";
+							ellipsisLink.textContent = "...";
+							ellipsisLi.appendChild(ellipsisLink);
+							paginationUl.appendChild(ellipsisLi);
+						}
+						
+						const lastPageLi = document.createElement("li");
+						const lastPageLink = document.createElement("a");
+						lastPageLink.href = "#";
+						lastPageLink.textContent = totalPages;
+						lastPageLink.onclick = (e) => {
+							e.preventDefault();
+							currentPage = totalPages;
+							renderPage();
+						};
+						lastPageLi.appendChild(lastPageLink);
+						paginationUl.appendChild(lastPageLi);
+					}
+					
+					// Next page button (>)
+					const nextLi = document.createElement("li");
+					nextLi.className = currentPage === totalPages ? "disabled" : "";
+					const nextLink = document.createElement("a");
+					nextLink.href = "#";
+					nextLink.innerHTML = "&raquo;";
+					if (currentPage < totalPages) {
+						nextLink.onclick = (e) => {
+							e.preventDefault();
+							currentPage++;
+							renderPage();
+						};
+					}
+					nextLi.appendChild(nextLink);
+					paginationUl.appendChild(nextLi);
+					
+					// Last page button (>>)
+					const lastLi = document.createElement("li");
+					lastLi.className = currentPage === totalPages ? "disabled" : "";
+					const lastLink = document.createElement("a");
+					lastLink.href = "#";
+					lastLink.innerHTML = "&raquo;&raquo;";
+					if (currentPage < totalPages) {
+						lastLink.onclick = (e) => {
+							e.preventDefault();
+							currentPage = totalPages;
+							renderPage();
+						};
+					}
+					lastLi.appendChild(lastLink);
+					paginationUl.appendChild(lastLi);
+					
+					paginationContainer.style.display = "block";
+					
+					// Show results per page selector when pagination is shown
+					const resultsPerPage = document.getElementById("resultsPerPage");
+					if (resultsPerPage) {
+						resultsPerPage.style.display = "block";
+					}
+				} else {
+					// No pagination needed, but still show results per page selector if there are schematics
+					paginationContainer.style.display = "none";
+					if (filteredSchematics.length > 0) {
+						const resultsPerPage = document.getElementById("resultsPerPage");
+						if (resultsPerPage) {
+							resultsPerPage.style.display = "block";
+						}
+					}
+				}
+			}
+			
+			// Function to filter schematics based on search
+			function filterSchematics(searchTerm) {
+				if (!searchTerm || searchTerm.trim() === "") {
+					filteredSchematics = allSchematics;
+				} else {
+					const term = searchTerm.toLowerCase().trim();
+					filteredSchematics = allSchematics.filter(schematic => 
+						schematic.name.toLowerCase().includes(term)
+					);
+				}
+				currentPage = 1; // Reset to first page when filtering
+				renderPage();
+			}
+			
+			// Load the schematic list
+			async function loadSchematicList() {
+				const loadingMessage = document.getElementById("loading-message");
+				const table = document.getElementById("schematic-table");
+				const emptyMessage = document.getElementById("empty-message");
+				const searchInput = document.getElementById("search-input");
+				
+				try {
+					const response = await fetch('/api/list/list');
+					if (!response.ok) {
+						throw new Error(`Failed to fetch schematic list: ${response.statusText}`);
+					}
+					
+					allSchematics = await response.json();
+					
+					// Hide loading message
+					loadingMessage.style.display = "none";
+					
+					if (allSchematics.length === 0) {
+						emptyMessage.style.display = "block";
+						table.style.display = "none";
+						const tableHead = document.getElementById("schematic-table-head");
+						if (tableHead) tableHead.style.display = "none";
+						searchInput.disabled = true;
+						// Hide results per page selector when no schematics
+						const resultsPerPage = document.getElementById("resultsPerPage");
+						if (resultsPerPage) resultsPerPage.style.display = "none";
+					} else {
+						emptyMessage.style.display = "none";
+						table.style.display = "table";
+						const tableHead = document.getElementById("schematic-table-head");
+						if (tableHead) tableHead.style.display = "";
+						searchInput.disabled = false;
+						
+						// Initialize filtered list and render
+						filteredSchematics = allSchematics;
+						renderPage();
+						
+						// Show results per page selector after loading
+						const resultsPerPage = document.getElementById("resultsPerPage");
+						if (resultsPerPage) resultsPerPage.style.display = "block";
+					}
+				} catch (error) {
+					loadingMessage.textContent = "Error loading schematics: " + error.message;
+					loadingMessage.style.color = "#d9534f";
+					console.error("Error loading schematic list:", error);
+				}
+			}
+			
+			// Set up search input handler
+			const searchInput = document.getElementById("search-input");
+			const clearSearch = document.getElementById("clear-search");
+			
+			searchInput.addEventListener("input", (e) => {
+				const hasValue = e.target.value.trim().length > 0;
+				clearSearch.style.display = hasValue ? "inline-block" : "none";
+				filterSchematics(e.target.value);
+			});
+			
+			// Clear search button handler
+			clearSearch.addEventListener("click", () => {
+				searchInput.value = "";
+				clearSearch.style.display = "none";
+				filterSchematics("");
+			});
+			
+			// Items per page selector handler
+			const itemsPerPageSelect = document.getElementById("items-per-page-select");
+			itemsPerPageSelect.addEventListener("change", (e) => {
+				itemsPerPage = parseInt(e.target.value);
+				currentPage = 1; // Reset to first page when changing items per page
+				renderPage();
+			});
+			
+			// Pause/Resume button handler
+			// Note: Actual pause/resume functionality will be implemented in WebSchematics JS
+			// This just toggles the UI state for now
+			const pauseResumeBtn = document.getElementById("pause-resume-btn");
+			if (pauseResumeBtn) {
+				pauseResumeBtn.addEventListener("click", () => {
+					if (!currentRenderer) return;
+					
+					const previewPanel = document.getElementById("preview-panel");
+					const canvas = previewPanel.querySelector('canvas');
+					if (!canvas) return;
+					
+					const icon = pauseResumeBtn.querySelector("i");
+					// Toggle UI state - actual pause/resume will be handled by WebSchematics
+					isPaused = !isPaused;
+					if (icon) {
+						icon.className = isPaused ? "icon-play" : "icon-pause";
+					}
+					pauseResumeBtn.title = "Pause/resume preview";
+					
+					// Dispatch event for WebSchematics to handle
+					window.dispatchEvent(new CustomEvent('webschematics:pause-resume', {
+						detail: { 
+							canvas: canvas,
+							paused: isPaused
+						}
+					}));
+				});
+			}
+			
+			// Exit preview button handler
+			const exitPreviewBtn = document.getElementById("exit-preview-btn");
+			if (exitPreviewBtn) {
+				exitPreviewBtn.addEventListener("click", () => {
+					clearPreview();
+				});
+			}
+			
+			// Load the list when page loads
+			loadSchematicList();
+		</script>
+	</body>
+</html>
+

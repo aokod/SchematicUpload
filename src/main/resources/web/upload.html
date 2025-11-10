@@ -11,13 +11,13 @@
 		<link href="https://aedi.app/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
 		<link href="https://aedi.app/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
 		<link href="https://aedi.app/assets/css/custom.css" rel="stylesheet" type="text/css" media="all">
-		<link rel="stylesheet" href="./schem.css"/>
+		<link rel="stylesheet" href="/schem.css"/>
 
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 		<script type="text/javascript" src="https://aedi.app/assets/js/bootstrap.min.js"></script>
 		<!-- SchematicUpload JS -->
 		<script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
-		<script src="./uploader.js"></script>
+		<script src="/uploader.js"></script>
 		<script type="text/javascript">
 			// Toggle accordion icons when expanded/collapsed
 			$(document).ready(function() {
@@ -97,27 +97,53 @@
 									<label class="control-label" for="file-upload">Choose file</label>
 									<div class="controls">
 										<input required id="file-upload" name="file-upload" type="file" accept=".schem,.schematic,.litematic"/>
-										<label class="checkbox"><input id="show-preview" type="checkbox"> Show a preview of your schematic</label>
+										<label class="checkbox"><input id="show-preview" type="checkbox"> Show a preview of the schematic</label>
 										<script type="module">
-											import renderSchematic from './preview/src/webschematics.js';
+											import renderSchematic from '/preview/src/webschematics.js';
 			
 											let currentEllipsisInterval = null;
 											let currentFile = null;
+											
+											// Set up stats event listener
+											const previewStats = document.getElementById("preview-stats");
+											const statsFps = document.getElementById("stats-fps");
+											const statsMeshes = document.getElementById("stats-meshes");
+											const statsVertices = document.getElementById("stats-vertices");
+											const statsFaces = document.getElementById("stats-faces");
+											
+											window.addEventListener('webschematics:stats', (event) => {
+												const { type, data } = event.detail;
+												
+												if (type === 'fps') {
+													statsFps.textContent = data.fps;
+													statsMeshes.textContent = data.meshes.toLocaleString();
+													statsVertices.textContent = data.vertices.toLocaleString();
+													statsFaces.textContent = data.faces.toLocaleString();
+													previewStats.style.display = "block";
+												} else if (type === 'render:complete' || type === 'render:finished') {
+													// Update geometry stats when rendering completes
+													statsMeshes.textContent = data.meshes.toLocaleString();
+													statsVertices.textContent = data.vertices.toLocaleString();
+													statsFaces.textContent = data.faces.toLocaleString();
+													previewStats.style.display = "block";
+												}
+											});
 											
 											// Function to clear the preview panel (remove renderer)
 											function clearPreview() {
 												const previewPanel = document.getElementById("preview-panel");
 												const previewText = document.getElementById("preview-text");
 												
-												// Remove all children except preview-text
+												// Remove all children except preview-text and preview-stats
 												const children = Array.from(previewPanel.children);
 												children.forEach(child => {
-													if (child !== previewText) {
+													if (child !== previewText && child !== previewStats) {
 														previewPanel.removeChild(child);
 													}
 												});
 												
-												// Show preview-text
+												// Hide stats and show preview-text
+												previewStats.style.display = "none";
 												previewText.style.display = "";
 											}
 											
@@ -137,7 +163,7 @@
 												if (!box.checked) {
 													clearPreview();
 													if (currentFile) {
-														previewText.textContent = "Check the box to show a preview of your schematic.";
+														previewText.textContent = "Check the box to show a preview of the schematic.";
 													} else {
 														previewText.textContent = "Choose a file to show a preview of the schematic.";
 													}
@@ -151,7 +177,7 @@
 													// Clear any existing render before starting a new one
 													clearPreview();
 													
-													const baseMessage = "<i class='icon-spinner icon-spin'></i> Loading a preview of your schematic";
+													const baseMessage = "<i class='icon-spinner icon-spin'></i> Loading a preview of the schematic";
 													
 													// Animate ellipsis (1-3 periods)
 													let ellipsisCount = 0;
@@ -179,7 +205,7 @@
 													}
 												} else {
 													// Reset to default message if file doesn't match
-													previewText.textContent = "Choose a file to see a preview of the schematic.";
+													previewText.textContent = "Choose a file to show a preview of the schematic.";
 												}
 											}
 											
@@ -255,7 +281,13 @@
 						</div><!-- /span6 -->
 						<div class="span6 preview">
 							<div id="preview-panel">
-								<p id="preview-text">Choose a file to see a preview of the schematic.</p>
+								<p id="preview-text" class="text-center text-muted">Choose a file to show a preview of the schematic.</p>
+								<div id="preview-stats" style="display: none;">
+									<div class="stats-line"><span class="stats-label">FPS:</span> <span id="stats-fps">-</span></div>
+									<div class="stats-line"><span class="stats-label">Meshes:</span> <span id="stats-meshes">-</span></div>
+									<div class="stats-line"><span class="stats-label">Vertices:</span> <span id="stats-vertices">-</span></div>
+									<div class="stats-line"><span class="stats-label">Faces:</span> <span id="stats-faces">-</span></div>
+								</div>
 							</div>
 						</div><!-- /span6 -->
 					</div><!-- /row fluid -->

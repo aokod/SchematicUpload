@@ -26,10 +26,9 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.jetbrains.annotations.NotNull;
@@ -131,14 +130,6 @@ public class WebServer {
                 });
             }
 
-            // Create resource handler to handle requests
-            final ResourceHandler resourceHandler = new ResourceHandler();
-            resourceHandler.setWelcomeFiles(new String[]{"index.html"});
-            resourceHandler.setResourceBase(targetDir.getPath());
-            resourceHandler.setDirectoriesListed(true);
-            final ContextHandler staticHandler = new ContextHandler("/");
-            staticHandler.setHandler(resourceHandler);
-
             // Create multipart upload handler directory
             final Path uploadTempDirectory = plugin.getSchematicDirectory().resolve(".temp");
             if (uploadTempDirectory.toFile().mkdirs()) {
@@ -150,6 +141,12 @@ public class WebServer {
             final long maxRequestSize = 20 * 1024 * 1024; // 20 MB
             final int fileSizeThreshold = 64; // 64 bytes
 
+            // Create servlet context handler - combines servlets and static file serving
+            final ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            contextHandler.setContextPath("/");
+            contextHandler.setResourceBase(targetDir.getPath());
+            contextHandler.setWelcomeFiles(new String[]{"index.html"});
+
             // Create multipart upload handler
             final MultipartConfigElement multipartConfig = new MultipartConfigElement(uploadTempDirectory.toString(),
                     maxFileSize, maxRequestSize, fileSizeThreshold);
@@ -157,13 +154,33 @@ public class WebServer {
             final ServletHolder servletHolder = new ServletHolder(saveUploadServlet);
             servletHolder.getRegistration().setMultipartConfig(multipartConfig);
 
-            // Register as a servlet
-            final ServletHandler apiHandler = new ServletHandler();
-            apiHandler.addServletWithMapping(servletHolder, "/api");
+            // Create schematic list/download handler
+            final SchematicListServlet listServlet = new SchematicListServlet(plugin);
+            final ServletHolder listServletHolder = new ServletHolder(listServlet);
 
-            // Set handlers, start server
+            // Create page routing handler for /list and /upload
+            final PageRoutingServlet pageRouter = new PageRoutingServlet(plugin);
+            final ServletHolder pageRouterHolder = new ServletHolder(pageRouter);
+
+            // Register servlets - specific routes first
+            contextHandler.addServlet(servletHolder, "/api");
+            contextHandler.addServlet(listServletHolder, "/api/list/*");
+            contextHandler.addServlet(pageRouterHolder, "/list");
+            contextHandler.addServlet(pageRouterHolder, "/list/");
+            contextHandler.addServlet(pageRouterHolder, "/upload");
+            contextHandler.addServlet(pageRouterHolder, "/upload/");
+
+            // Add default servlet for static files - must be last to catch unmatched requests
+            final ServletHolder defaultHolder = new ServletHolder("default", DefaultServlet.class);
+            defaultHolder.setInitParameter("resourceBase", targetDir.getPath());
+            defaultHolder.setInitParameter("dirAllowed", "true");
+            defaultHolder.setInitParameter("welcomeServlets", "false");
+            defaultHolder.setInitParameter("redirectWelcome", "false");
+            contextHandler.addServlet(defaultHolder, "/");
+
+            // Set handler, start server
             HandlerList handlers = new HandlerList();
-            handlers.setHandlers(new Handler[]{staticHandler, apiHandler});
+            handlers.setHandlers(new Handler[]{contextHandler});
             jettyServer.setHandler(handlers);
             jettyServer.start();
             jettyServer.join();
